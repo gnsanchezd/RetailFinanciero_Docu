@@ -177,7 +177,7 @@ request({
 		dateArchivo = replaceAll( dateArchivo, ' ', '_' );
 		dateArchivo = replaceAll( dateArchivo, ':', '_' );
 		dateArchivo = replaceAll( dateArchivo, ',', '' );
-		workbook.write('../../PRODUCT_BACKLOG/SNAPSHOT/Task_RF_' + dateArchivo +'.xlsx');
+		workbook.write('../../ProductBackLog/SnapShot/Task_RF_' + dateArchivo +'.xlsx');
 	}
 	else
 	{
