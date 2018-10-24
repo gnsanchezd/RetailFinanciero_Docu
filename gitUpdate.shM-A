@@ -1,0 +1,9 @@
+# $1 : Comment Commit
+# $2 : Username
+# $3 : Password
+
+git add  .
+git commit -m ""
+
+git push 
+

@@ -1,4 +1,4 @@
-var request = require('request');
+﻿var request = require('request');
 var excel = require('excel4node');
 var _status    = ""
 		, _body    = ""
@@ -155,7 +155,7 @@ request({
 		dateArchivo = replaceAll( dateArchivo, ':', '_' );
 		dateArchivo = replaceAll( dateArchivo, ',', '' );
 		//console.log( dateArchivo );
-		workbook.write('Task_RF_' + dateArchivo +'.xlsx');
+		workbook.write('../../PRODUCT_BACKLOG/SNAPSHOT/Task_RF_' + dateArchivo +'.xlsx');
 	}
 	else
 	{
