@@ -3,6 +3,22 @@ var excel = require('excel4node');
 var _status    = ""
 		, _body    = ""
 		, _headers = "";
+var _sprints = "";
+
+
+request({
+  method: 'GET',
+  url: 'https://api.clickup.com/api/v1/space/455736/project',
+  headers: {
+    'Authorization': 'pk_A33IPMXOU2UJLFEYWF0WSIYSYC7PTB47'
+  }}, function (error, response, body) {
+
+  _sprints = JSON.parse( body );
+  _sprints = _sprints.projects[0].lists;
+
+//  _sprints = body.
+});
+
 
 request({
   method: 'GET',
@@ -79,6 +95,8 @@ request({
 		var _date_created = "";
 		var _date_updated = "";
 		var _date_closed = "";
+		var _lists_id = "";
+		var _lists_name = "";
 		//console.log( "Actividad ; Descripcion ; Estado ; Creador ; Asigando ; Fecha_Creacion ; Fecha_Actualizacion ; Fecha_Cierre ");
 		var separador = 3;
 
@@ -89,8 +107,9 @@ request({
 		worksheet.cell( separador, 2 ).string( "Actividad" ).style( style_cabecera );
 		worksheet.cell( separador, 3 ).string( "Descripción" ).style( style_cabecera );
 		worksheet.cell( separador, 4 ).string( "Estado" ).style( style_cabecera );
-		worksheet.cell( separador, 5 ).string( "Creador" ).style( style_cabecera );
-		worksheet.cell( separador, 6 ).string( "Responsable" ).style( style_cabecera );
+		worksheet.cell( separador, 5 ).string( "Sprint" ).style( style_cabecera );
+		worksheet.cell( separador, 6 ).string( "Creador" ).style( style_cabecera );
+		worksheet.cell( separador, 7 ).string( "Responsable" ).style( style_cabecera );
 
 		for( var i = 0; i < _tasks.length ; i++ )
 		{
@@ -102,7 +121,15 @@ request({
 			_date_created = _tasks[ i ].date_created;
 			_date_updated = _tasks[ i ].date_updated;
 			_date_closed  = _tasks[ i ].date_closed;
-			var _assigness_task = _tasks[ i ].assignees
+			var _assigness_task = _tasks[ i ].assignees;
+
+			for ( var  k = 0 ; k < _sprints.length ; k++ )
+			{	
+				if ( _sprints[ k ].id === _tasks[ i ].list.id )
+				{
+					_lists_name = _sprints[ k ].name;
+				}
+			}
 
 
 			if ( par === true )
@@ -111,7 +138,8 @@ request({
 				worksheet.cell( i + separador + 1, 2 ).string( validateNull(_name ) ).style( style );
 				worksheet.cell( i + separador + 1, 3 ).string( validateNull(_text ) ).style( style );
 				worksheet.cell( i + separador + 1, 4 ).string( validateNull(_status_task ) ).style( style );
-				worksheet.cell( i + separador + 1, 5 ).string( validateNull(_creator_task ) ).style( style );
+				worksheet.cell( i + separador + 1, 5 ).string( validateNull(_lists_name ) ).style( style );
+				worksheet.cell( i + separador + 1, 6 ).string( validateNull(_creator_task ) ).style( style );
 			}
 			else
 			{
@@ -119,24 +147,20 @@ request({
 				worksheet.cell( i + separador + 1, 2 ).string( validateNull(_name ) ).style( style_w );
 				worksheet.cell( i + separador + 1, 3 ).string( validateNull(_text ) ).style( style_w );
 				worksheet.cell( i + separador + 1, 4 ).string( validateNull(_status_task ) ).style( style_w );
-				worksheet.cell( i + separador + 1, 5 ).string( validateNull(_creator_task ) ).style( style_w );
+				worksheet.cell( i + separador + 1, 5 ).string( validateNull(_lists_name ) ).style( style_w );
+				worksheet.cell( i + separador + 1, 6 ).string( validateNull(_creator_task ) ).style( style_w );
 			}
 
-			//worksheet.cell( i + 2, 5 ).string( validateNull(_date_created ) ).style( style );
-			//worksheet.cell( i + 2, 6 ).string( validateNull(_date_updated ) ).style( style );
-			//worksheet.cell( i + 2, 7 ).string( validateNull(_date_closed ) ).style( style );
-			//worksheet.cell( i, 0 ).string( _).style( style );
-			//worksheet.cell( i, 0 ).string().style( style );
 			for ( var j = 0; j < _assigness_task.length ; j++ )
 			{
 				_assigness_role = _assigness_task[ j ].username;
 				if ( par  === true )
 				{
-					worksheet.cell( i + separador + 1, j + 1 + 5 ).string( _assigness_role ).style( style );
+					worksheet.cell( i + separador + 1, j + 1 + 6 ).string( _assigness_role ).style( style );
 				}
 				else
 				{
-					worksheet.cell( i + separador + 1, j + 1 + 5 ).string( _assigness_role ).style( style_w );
+					worksheet.cell( i + separador + 1, j + 1 + 6 ).string( _assigness_role ).style( style_w );
 				}
 
 			}
@@ -150,11 +174,9 @@ request({
 			}
 		}
 		var dateArchivo = _headers.date.toString( );
-		//console.log( dateArchivo );
 		dateArchivo = replaceAll( dateArchivo, ' ', '_' );
 		dateArchivo = replaceAll( dateArchivo, ':', '_' );
 		dateArchivo = replaceAll( dateArchivo, ',', '' );
-		//console.log( dateArchivo );
 		workbook.write('../../PRODUCT_BACKLOG/SNAPSHOT/Task_RF_' + dateArchivo +'.xlsx');
 	}
 	else
