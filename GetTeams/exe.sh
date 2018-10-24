@@ -1,2 +1,0 @@
-
-node getTaskByTeam.js
