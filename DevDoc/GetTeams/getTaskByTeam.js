@@ -29,7 +29,7 @@ request({
   _status   = response.statusCode;
 	_body 		= JSON.parse( body );
 	_headers	= response.headers;
-	//console.log( _headers.date );
+
 	//console.log( body );
 	var par = true;
 	if ( _status === 200 )
@@ -97,7 +97,7 @@ request({
 		var _date_closed = "";
 		var _lists_id = "";
 		var _lists_name = "";
-		//console.log( "Actividad ; Descripcion ; Estado ; Creador ; Asigando ; Fecha_Creacion ; Fecha_Actualizacion ; Fecha_Cierre ");
+
 		var separador = 3;
 
 		worksheet.cell( 1, 1 ).string( "Fecha Sprint" ).style( style_fecha );
